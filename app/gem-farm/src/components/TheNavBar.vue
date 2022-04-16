@@ -1,4 +1,4 @@
-<template>
+<!--template>
   <nav class="bg-black flex flex-row justify-center align-middle">
     <NavButton
       v-for="i in menu"
@@ -8,7 +8,7 @@
       :class="{ active: path === i.url }"
     />
   </nav>
-</template>
+</template-->
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue';

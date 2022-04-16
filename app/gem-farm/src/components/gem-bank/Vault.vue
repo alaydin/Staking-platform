@@ -85,6 +85,9 @@ export default defineComponent({
 
     // --------------------------------------- state
 
+    //ADDED - Mint string for metadata
+    const updateAuth = "3dnwU1PtgtvvBqV5AS2RrK8sePoQqrCiJPBGQZC8ASUu";
+
     //current walet/vault state
     const currentWalletNFTs = ref<INFT[]>([]);
     const currentVaultNFTs = ref<INFT[]>([]);
@@ -109,7 +112,8 @@ export default defineComponent({
       if (getWallet()) {
         currentWalletNFTs.value = await getNFTsByOwner(
           getWallet()!.publicKey!,
-          getConnection()
+          getConnection(),
+          updateAuth,
         );
         desiredWalletNFTs.value = [...currentWalletNFTs.value];
       }
@@ -131,7 +135,8 @@ export default defineComponent({
         });
         currentVaultNFTs.value = await getNFTMetadataForMany(
           mints,
-          getConnection()
+          getConnection(),
+          updateAuth,
         );
         desiredVaultNFTs.value = [...currentVaultNFTs.value];
         console.log(
@@ -209,7 +214,7 @@ export default defineComponent({
         console.log(nft);
         const creator = new PublicKey(
           //todo currently simply taking the 1st creator
-          (nft.onchainMetadata as any).data.creators[0].address
+          (nft.onchainMetadata as any).data.creators[1].address //check this: [0] metaplex, [1] my actual wallet
         );
         console.log('creator is', creator.toBase58());
         await depositGem(nft.mint, creator, nft.pubkey!);

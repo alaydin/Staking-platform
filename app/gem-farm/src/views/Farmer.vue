@@ -1,16 +1,17 @@
-<template>
+<template :style="{'background-image':'url(C:\\Users\\Burak\\Desktop\\staking_deploy_test\\gem-farm\\app\\gem-farm\\src\\assets\\logo.PNG)'}">
   <ConfigPane />
-  <div v-if="!wallet" class="text-center">Pls connect (burner) wallet</div>
-  <div v-else>
+  <div v-if="!wallet" class="text-center" :style="{'background-image':'url(C:\\Users\\Burak\\Desktop\\staking_deploy_test\\gem-farm\\app\\gem-farm\\src\\assets\\logo.PNG)'}">Pls connect (burner) wallet</div>
+  <div v-else :style="{'background-image':'url(C:\\Users\\Burak\\Desktop\\staking_deploy_test\\gem-farm\\app\\gem-farm\\src\\assets\\logo.PNG)'}">
+    <div :style="{'background-image':'url(C:\\Users\\Burak\\Desktop\\staking_deploy_test\\gem-farm\\app\\gem-farm\\src\\assets\\logo.PNG)'}"></div>
     <!--farm address-->
     <div class="nes-container with-title mb-10">
       <p class="title">Connect to a Farm</p>
       <div class="nes-field mb-5">
-        <label for="farm">Farm address:</label>
-        <input id="farm" class="nes-input" v-model="farm" />
+        <label for="farm">Farm address: {{farm}} </label>
+        <!--input id="farm" class="nes-input" v-model="farm" /-->
       </div>
     </div>
-
+    
     <div v-if="farmerAcc">
       <FarmerDisplay
         :key="farmerAcc"
@@ -102,7 +103,7 @@ export default defineComponent({
     });
 
     // --------------------------------------- farmer details
-    const farm = ref<string>();
+    const farm = ref<string>("GNiHhebVcoLbEV17fmhrxn33vp2YWJ2AuUaCTqJaey5e");
     const farmAcc = ref<any>();
 
     const farmerIdentity = ref<string>();

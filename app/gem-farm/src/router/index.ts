@@ -6,6 +6,11 @@ import Home from '@/views/Home.vue';
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
+    name: 'Farmer',
+    component: Farmer,
+  },
+  {
+    path: '/home',
     name: 'Home',
     component: Home,
   },
@@ -13,11 +18,6 @@ const routes: Array<RouteRecordRaw> = [
     path: '/manager',
     name: 'Farm Manager',
     component: Manager,
-  },
-  {
-    path: '/farmer',
-    name: 'Farmer',
-    component: Farmer,
   },
 ];
 

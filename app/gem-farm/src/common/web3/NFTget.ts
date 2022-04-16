@@ -10,6 +10,7 @@ const {
 export interface INFT {
   pubkey?: PublicKey;
   mint: PublicKey;
+  updateAuthority: string;
   onchainMetadata: unknown;
   externalMetadata: unknown;
 }
@@ -33,19 +34,26 @@ async function getTokensByOwner(owner: PublicKey, conn: Connection) {
 async function getNFTMetadata(
   mint: string,
   conn: Connection,
-  pubkey?: string
+  ua: string,
+  pubkey?: string,
 ): Promise<INFT | undefined> {
   // console.log('Pulling metadata for:', mint);
   try {
     const metadataPDA = await Metadata.getPDA(mint);
     const onchainMetadata = (await Metadata.load(conn, metadataPDA)).data;
+    const updateAuthority = onchainMetadata.updateAuthority;
+    const symbol = onchainMetadata.data.symbol;
+    const creators = onchainMetadata.data.creators;
     const externalMetadata = (await axios.get(onchainMetadata.data.uri)).data;
-    return {
-      pubkey: pubkey ? new PublicKey(pubkey) : undefined,
-      mint: new PublicKey(mint),
-      onchainMetadata,
-      externalMetadata,
-    };
+    if (symbol === "HHC") {
+      return {
+        pubkey: pubkey ? new PublicKey(pubkey) : undefined,
+        mint: new PublicKey(mint),
+        updateAuthority,
+        onchainMetadata,
+        externalMetadata,
+      };
+    }
   } catch (e) {
     console.log(`failed to pull metadata for token ${mint}`);
   }
@@ -53,22 +61,23 @@ async function getNFTMetadata(
 
 export async function getNFTMetadataForMany(
   tokens: any[],
-  conn: Connection
+  conn: Connection,
+  updateAuth: string,
 ): Promise<INFT[]> {
   const promises: Promise<INFT | undefined>[] = [];
-  tokens.forEach((t) => promises.push(getNFTMetadata(t.mint, conn, t.pubkey)));
+  tokens.forEach((t) => promises.push(getNFTMetadata(t.mint, conn, t.pubkey, updateAuth)));
   const nfts = (await Promise.all(promises)).filter((n) => !!n);
   console.log(`found ${nfts.length} metadatas`);
-
   return nfts as INFT[];
 }
 
 export async function getNFTsByOwner(
   owner: PublicKey,
-  conn: Connection
+  conn: Connection,
+  updateAuth: string,
 ): Promise<INFT[]> {
   const tokens = await getTokensByOwner(owner, conn);
   console.log(`found ${tokens.length} tokens`);
 
-  return await getNFTMetadataForMany(tokens, conn);
+  return await getNFTMetadataForMany(tokens, conn, updateAuth);
 }
